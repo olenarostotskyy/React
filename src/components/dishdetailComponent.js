@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
     Card, CardImg, CardImgOverlay, CardText, CardBody,
     CardTitle
 } from 'reactstrap';
-class DishDetail extends Component {
-    constructor(props) {
-        super(props);
 
-    }
 
-    renderDish(dish) {
+   function RenderDish({dish}) {
         if (dish != null) {//check if dish not equal to null. So, obviously if the dish is not null, only then I will render the dish. Otherwise, I will simply return a div, an empty div here. S
             return (
                 //card component
@@ -26,12 +22,14 @@ class DishDetail extends Component {
         }
         else
             return (
-                <div></div>//empty div
+                <div> 
+
+                </div> //empty div
             );
     }
 
 
-    renderComments(comments) {
+    function RenderComments({comments}) {
         if (comments != null)
             return (
                 <div className="col-sm-12 col-md-5 m-1">
@@ -59,14 +57,14 @@ class DishDetail extends Component {
     }
 
 
-    render() {
-        const dish = this.props.dish;
-        if (dish != null)
+    const DishDetail =(props) =>{
+    
+        if (props.dish != null)
             return (
                 <div class="container">
                 <div className="row">
-                    {this.renderDish(dish)}
-                    {this.renderComments(dish.comments)}
+                    <RenderDish dish ={props.dish}/>
+                   <RenderComments comments={props.dish.comments}/>
                 </div>
                 </div>
             );
@@ -75,6 +73,5 @@ class DishDetail extends Component {
                 <div> </div>
             )
     }
-}
 
 export default DishDetail;
