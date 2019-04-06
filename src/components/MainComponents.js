@@ -3,6 +3,7 @@ import Home from './HomeComponent';
 import Menu from './MenuComponents';
 import Contact from './ContactComponent';
 import DishDetail from './dishdetailComponent';
+import About from './AboutComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import {DISHES} from '../shared/dishes';
@@ -54,7 +55,9 @@ comments={this.state.comments.filter((comment)=>comment.dishId === parseInt(matc
   
               <Route path='/home' component={HomePage} />
               
-            <Route exact path='/menu' render={() => <Menu dishes={this.state.dishes} />} />
+              <Route path='/aboutus'component={()=><About leaders={this.state.leaders}/>} />
+              
+            <Route exact path='/menu' render={()=> <Menu dishes={this.state.dishes} />} />
             
             <Route path="/menu/:dishId" component={DishWithId}/>
             
