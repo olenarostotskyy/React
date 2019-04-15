@@ -1,8 +1,11 @@
-import React from 'react';
-import { Card, CardImg, CardImgOverlay, CardText, CardBody,
-    CardTitle, Breadcrumb, BreadcrumbItem
+import React, { Component } from 'react';
+import {
+    Card, CardImg, CardImgOverlay, CardText, CardBody,
+    CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Col, Row, FormFeedback
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Control, LocalForm, Errors } from 'react-redux-form';
+
 
 
 
@@ -45,7 +48,16 @@ function RenderComments({ comments }) {
                         );
                     })}
                 </ul>
+                <React.Fragment>
+
+                    <CommentForm />
+                </React.Fragment>
+
+
+
             </div>
+
+
         );
 
     else {
@@ -55,8 +67,111 @@ function RenderComments({ comments }) {
             </div>
         );
     }
+
 }
 
+
+const required = (val) => val && val.length;// cheked is the value is greater than 0.
+const maxLength = (len) => (val) => !(val) || (val.length <= len);//receives a length as a parameter and also receives the value.  So this is the maximum length. So this enables us to check and make sure that the length of the value entered in the input box is below a certain value.
+const minLength = (len) => (val) => val && (val.length >= len);
+
+
+class CommentForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isModalOpen: false
+
+
+        };
+        this.toggleModal = this.toggleModal.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+    }
+    handleSubmit(values) {
+        console.log("Current state is:" + JSON.stringify(values))
+        alert("Current state is:" + JSON.stringify(values));
+    }
+
+    toggleModal() {
+        this.setState({
+            isModalOpen: !this.state.isModalOpen
+        });
+    }
+    render() {
+        return (
+            <React.Fragment>
+                <Button outline color="secondary" onClick={this.toggleModal}>Submit comment</Button>{' '}
+                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+                    <ModalBody>
+                        <div className="col-12 col-md-12" >
+                            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                                <Row className="form-group">
+                                    <Label htmlFor="rating" md={12}>Rating</Label>
+                                    <Col md={12}>
+                                        <Control.select model=".rating" name="rating"
+                                            placeholder="Rating"
+                                            className="form-control">
+
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+
+                                        </Control.select>
+
+                                    </Col>
+                                </Row>
+                                <Row className="form-group">
+                                    <Label htmlFor="author" md={12}>Your Name</Label>
+                                    <Col md={12}>
+                                        <Control.text model=".author" id="author" name="author"
+                                            placeholder=" Your Name"
+                                            className="form-control"
+                                            validators={{
+                                                required, minLength: minLength(3), maxLength: maxLength(15)
+                                            }}
+                                        />
+                                        <Errors
+                                            className="text-denger"
+                                            model=".author"
+                                            show="touched"
+                                            messages={{
+                                                required: 'Required',
+                                                minLength: 'Must be greater than 3 charecters',
+                                                maxLength: 'Must be 15 characters or less'
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
+
+                                <Row className="form-group">
+                                    <Label htmlFor="message" md={12}>Comment</Label>
+                                    <Col md={12}>
+                                        <Control.textarea model=".message" id="message" name="message"
+                                            placeholder="Your comment"
+                                            rows="6"
+                                            className="form-control" />
+                                    </Col>
+                                </Row>
+                                <Row className="form-group">
+                                    <Col md={{ size: 12 }}>
+                                        <Button type="submit" color="primary">
+                                            Submit
+                                    </Button>
+                                    </Col>
+                                </Row>
+                            </LocalForm>
+                        </div>
+                    </ModalBody>
+                </Modal>
+            </React.Fragment>
+        );
+    }
+
+}
 
 const DishDetail = (props) => {
 
@@ -65,7 +180,7 @@ const DishDetail = (props) => {
             <div class="container">
                 <div className="row">
                     <Breadcrumb>
-                       
+
                         <BreadcrumbItem> <Link to='/menu'> Menu</Link></BreadcrumbItem>
 
                         <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
@@ -85,5 +200,7 @@ const DishDetail = (props) => {
             <div> </div>
         )
 }
+
+
 
 export default DishDetail;
