@@ -4,6 +4,7 @@ import {
     Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Loading } from './LoadingComponent';
 
 
 function RenderMenuItem({ dish, onClick }) {
@@ -28,7 +29,7 @@ function RenderMenuItem({ dish, onClick }) {
 
 const Menu = (props) => {// way of implementing a functional component
 
-    const menu = props.dishes.map((dish) => {
+    const menu = props.dishes.dishes.map((dish) => {
 
         return (
             <div className="col-12 col-md-5 m-1">
@@ -36,24 +37,48 @@ const Menu = (props) => {// way of implementing a functional component
             </div>
         );
     });//m-1. Meaning, one unit margin all around in here. So by doing this, what I am doing to this div is, for the extra small to small screen sizes,
+
     console.log('Menu Components render is invoked');
 
-    return (
-        <div className="container">
-            <div className="row">
-                <Breadcrumb>
-                    <BreadcrumbItem> <Link to='/home'> Home</Link></BreadcrumbItem>
-                    <BreadcrumbItem active>Menu</BreadcrumbItem>
-                </Breadcrumb>
-                <div className="col-12">
-                    <h3>Menu</h3>
+    if (props.dishes.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
                 </div>
             </div>
-            <div className="row">
-                {menu}
+        );
+    }
+
+    else if (props.dishes.errMess) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <div className="col-12">
+                        <h4>{props.dishes.errMess}</h4>
+                    </div>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
+
+    else
+        return (
+            <div className="container">
+                <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem> <Link to='/home'> Home</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>Menu</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>Menu</h3>
+                    </div>
+                </div>
+                <div className="row">
+                    {menu}
+                </div>
+            </div>
+        );
 }
 
 
