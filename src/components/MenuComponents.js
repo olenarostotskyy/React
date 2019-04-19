@@ -1,10 +1,9 @@
 import React from 'react';
-
-import {
-    Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem
+import {Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 
 function RenderMenuItem({ dish, onClick }) {
@@ -14,7 +13,7 @@ function RenderMenuItem({ dish, onClick }) {
         // what happens here is that for each specific dish, the corresponding dish ID value is evaluated here, and this will be substituted by the dish ID values.
         <Card>
             <Link to={`/menu/${dish.id}`} >
-                <CardImg width="100%" src={dish.image} alt={dish.name} />
+                <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
                 <CardBody>
                     <CardTitle>{dish.name}</CardTitle>
 
@@ -75,7 +74,7 @@ const Menu = (props) => {// way of implementing a functional component
                     </div>
                 </div>
                 <div className="row">
-                    {menu}
+                    {menu} 
                 </div>
             </div>
         );
