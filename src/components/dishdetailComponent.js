@@ -7,15 +7,20 @@ import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
+
+
 
 
 
 
 function RenderDish({ dish }) {
-    if (dish != null) {//check if dish not equal to null. So, obviously if the dish is not null, only then I will render the dish. Otherwise, I will simply return a div, an empty div here. S
-        return (
-            //card component
-            <div className="col-sm-12 col-md-5 m-1">
+    return (
+        <div className="col-sm-12 col-md-5 m-1">
+            <FadeTransform in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
                 <Card>
                     <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
                     <CardBody>
@@ -23,15 +28,9 @@ function RenderDish({ dish }) {
                         <CardText>{dish.description}</CardText>
                     </CardBody>
                 </Card>
-            </div>
-        );
-    }
-    else
-        return (
-            <div>
-
-            </div> //empty div
-        );
+            </FadeTransform>
+        </div>
+    );
 }
 
 
@@ -41,14 +40,18 @@ function RenderComments({ comments, postComment, dishId }) {
             <div className="col-sm-12 col-md-5 m-1">
                 <h4>Comments</h4>
                 <ul className="list-unstyled">
-                    {comments.map((comment) => {
-                        return (
-                            <li key={comment.id}>
-                                <p>--{comment.author},{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
-                                <p>--{comment.comment}</p>
-                            </li>
-                        );
-                    })}
+                    <Stagger in>
+                        {comments.map((comment) => {
+                            return (
+                                <Fade in>
+                                <li key={comment.id}>
+                                    <p>--{comment.author},{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
+                                    <p>--{comment.comment}</p>
+                                </li>
+                                </Fade>
+                            );
+                        })}
+                    </Stagger>
                 </ul>
                 <React.Fragment>
 
