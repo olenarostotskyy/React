@@ -1,22 +1,20 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import {Loading} from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 function About(props) {
 
-    const leaders = props.leaders.map((leader) => {
+    const leaders = props.leaders.leaders.map((leader) => {
         return (
             <React.Fragment>
                 <RenderLeaders leader={leader} ></RenderLeaders>
-                
+               
                
             </React.Fragment>
         );
     });
-
-    
-    
-
 
     return(
         <div className="container">
@@ -88,7 +86,7 @@ function RenderLeaders({leader}){
       <div key={leader.id} className="col-12 mt-5">
         <Media tag="li">
           <Media left middle>
-              <Media object src={leader.image} alt={leader.name} />
+              <Media object src={baseUrl+ leader.image} alt={leader.name} />
           </Media>
           <Media body className="ml-5">
             <Media heading>{leader.name}</Media>
@@ -100,4 +98,61 @@ function RenderLeaders({leader}){
     );   
     }
 
+    const LeaderList = (props) => {// way of implementing a functional component
+
+        const RenderLeaders = props.leaders.leaders.map((leader) => {
+
+            return (
+                <div className="col-12 col-md-5 m-1">
+                    <RenderLeaders leader={leader} />
+                </div>
+            )
+        })
+        //m-1. Meaning, one unit margin all around in here. So by doing this, what I am doing to this div is, for the extra small to small screen sizes,
+        
+        
+    
+        if (props.leaders.isLoading) {
+            return (
+                <div className="container">
+                    <div className="row">
+                        <Loading />
+                    </div>
+                </div>
+            );
+        }
+    
+        else if (props.leaders.errMess) {
+            return (
+                <div className="container">
+                    <div className="row">
+                        <div className="col-12">
+                            <h4>{props.leaders.errMess}</h4>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        else
+        return (
+            <div className="container">
+                <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem> <Link to='/home'> Home</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>Leaders</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>Menu</h3>
+                    </div>
+                </div>
+                <div className="row">
+                    {LeaderList} 
+                </div>
+            </div>
+        );
+    }
+
+    
+
+    
 export default About;    

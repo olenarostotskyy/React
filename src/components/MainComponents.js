@@ -9,7 +9,7 @@ import Footer from './FooterComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { comment } from 'postcss-selector-parser';
-import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionsCreators';
+import { postComment, fetchDishes, fetchComments, fetchPromos, fetchLeaders, postFeedback } from '../redux/ActionsCreators';
 import { dispatch } from 'rxjs/internal/observable/range';
 import { actions } from 'react-redux-form';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -29,8 +29,9 @@ const mapDispatchToProps = dispatch => ({
   fetchDishes: () => { dispatch(fetchDishes()) },
   resetFeedbackForm: () => { dispatch(actions.reset('feedback')) },
   fetchComments: () => { dispatch(fetchComments()) },
-  fetchPromos: () => { dispatch(fetchPromos()) }
-
+  fetchPromos: () => { dispatch(fetchPromos()) },
+  fetchLeaders: () => { dispatch(fetchLeaders()) },
+  postFeedback: (feedback) => { dispatch(postFeedback(feedback)) }
 });
 
 
@@ -43,6 +44,8 @@ class Main extends Component {
     this.props.fetchDishes();//whatever we include in this lifecycle method component will bound will be called or will be executed just after this component gets mounted into the view of my application.
     this.props.fetchComments();
     this.props.fetchPromos();
+    this.props.fetchLeaders();
+
   }
 
   render() {
@@ -54,7 +57,11 @@ class Main extends Component {
           promotion={this.props.promotions.promotions.filter((promo) => promo.featured)[0]}
           promosLoading={this.props.promotions.isLoading}
           promosErrMess={this.props.promotions.errMess}
-          leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+          leaders={this.props.leaders.leaders.filter((leader) => leader.featured)[0]}
+          leadersLoading={this.props.leaders.isLoading}
+          leadersErrMess={this.props.leaders.errMess}
+
+
         /> //is true (we have only one feature what is true  ---is the first element in the arrey :[0])
       );
     }
@@ -88,7 +95,7 @@ class Main extends Component {
 
               <Route path="/menu/:dishId" component={DishWithId} />
 
-              <Route exact path='/contactus' component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
+              <Route exact path='/contactus' component={() => <Contact postFeedback={this.props.postFeedback} resetFeedbackForm={this.props.resetFeedbackForm}/>} />
 
               <Redirect to="/home" />
 
