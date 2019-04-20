@@ -12,6 +12,8 @@ import { comment } from 'postcss-selector-parser';
 import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionsCreators';
 import { dispatch } from 'rxjs/internal/observable/range';
 import { actions } from 'react-redux-form';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
 
 const mapStateToProps = state => {
   return {
@@ -24,10 +26,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)),
-  fetchDishes: () => { dispatch(fetchDishes())},
-  resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
-  fetchComments: () => { dispatch(fetchComments())},
-  fetchPromos: () => { dispatch(fetchPromos())}
+  fetchDishes: () => { dispatch(fetchDishes()) },
+  resetFeedbackForm: () => { dispatch(actions.reset('feedback')) },
+  fetchComments: () => { dispatch(fetchComments()) },
+  fetchPromos: () => { dispatch(fetchPromos()) }
 
 });
 
@@ -47,12 +49,12 @@ class Main extends Component {
     const HomePage = () => {
       return (
         <Home dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
-        dishesLoading={this.props.dishes.isLoading}
-        dishesErrMess={this.props.dishes.errMess}
-        promotion={this.props.promotions.promotions.filter((promo) => promo.featured)[0]}
-        promosLoading={this.props.promotions.isLoading}
-        promosErrMess={this.props.promotions.errMess}
-        leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+          dishesLoading={this.props.dishes.isLoading}
+          dishesErrMess={this.props.dishes.errMess}
+          promotion={this.props.promotions.promotions.filter((promo) => promo.featured)[0]}
+          promosLoading={this.props.promotions.isLoading}
+          promosErrMess={this.props.promotions.errMess}
+          leader={this.props.leaders.filter((leader) => leader.featured)[0]}
         /> //is true (we have only one feature what is true  ---is the first element in the arrey :[0])
       );
     }
@@ -60,13 +62,13 @@ class Main extends Component {
     const DishWithId = ({ match }) => {
       return (
 
-        <DishDetail dish={this.props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
-        isLoading={this.props.dishes.isLoading}
-        errMess={this.props.dishes.errMess}
-        comments={this.props.comments.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
-        commentsErrMess={this.props.comments.errMess}
-        postComment={this.props.postComment}
-      />
+        <DishDetail dish={this.props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId, 10))[0]}
+          isLoading={this.props.dishes.isLoading}
+          errMess={this.props.dishes.errMess}
+          comments={this.props.comments.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId, 10))}
+          commentsErrMess={this.props.comments.errMess}
+          postComment={this.props.postComment}
+        />
       )
 
     }
@@ -74,21 +76,25 @@ class Main extends Component {
     return (
       <div>
         <Header />
-        <Switch>
+        <TransitionGroup>
+          <CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
+            <Switch>
 
-          <Route path='/home' component={HomePage} />
+              <Route path='/home' component={HomePage} />
 
-          <Route path='/aboutus' component={() => <About leaders={this.props.leaders} />} />
+              <Route path='/aboutus' component={() => <About leaders={this.props.leaders} />} />
 
-          <Route exact path='/menu' render={() => <Menu dishes={this.props.dishes} />} />
+              <Route exact path='/menu' render={() => <Menu dishes={this.props.dishes} />} />
 
-          <Route path="/menu/:dishId" component={DishWithId} />
+              <Route path="/menu/:dishId" component={DishWithId} />
 
-          <Route exact path='/contactus' component={()=><Contact resetFeedbackForm={this.props.resetFeedbackForm}/>} />
+              <Route exact path='/contactus' component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
 
               <Redirect to="/home" />
 
-        </Switch>
+            </Switch>
+          </CSSTransition>
+        </TransitionGroup>
         <Footer />
       </div>//from this dishes array, I'm going to select out one dish, that one particular dish is the one for which the dishId matches the selected dish here. 
       //filter function, if you recall from your knowledge of JavaScript this filter function will give the sub array of the dishes for which the sub-array contains are rather, constrained part of the array, or just the elements from the array, for which this property, the dishId matches selected dish.  
